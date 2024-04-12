@@ -10,8 +10,6 @@
         <link rel="icon" href="images/drapeau.png" type="image/x-icon">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-        
-
         <style>
             /* Style pour le champ de saisie fixé au pied de la page */
             #footerInput {
@@ -47,13 +45,12 @@
         <div class="container-fluid sticky-top" style="background-color: white;">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-dark p-0">
-                    <a href="" class="navbar-brand d-flex align-items-center"> <!-- Ajoutez la classe d-flex et align-items-center -->
+                    <a href="index.html" class="navbar-brand d-flex align-items-center"> <!-- Ajoutez la classe d-flex et align-items-center -->
                         <h1 class="text-dark "> <!-- Ajoutez la classe m-0 pour supprimer les marges -->
                             Auphelia.IA
                         </h1>
                         <img src="images/drapeau.png" class="ml-2" style="height: 30px; width: auto;">
                     </a>
-                    <div id="recordingDuration"></div>
                     <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
                         data-bs-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
@@ -86,10 +83,9 @@
                             <button class="btn btn-primary icon" onclick="sendMessage()">
                                 <i class="fa fa-paper-plane"></i> <!-- Icône d'envoi -->
                             </button>
-                            <button class="btn btn-primary icon" onclick="recordAndTranslate()">
+                            <button class="btn btn-primary icon">
                                 <i class="fa fa-microphone"></i> <!-- Icône de microphone -->
                             </button>
-                            
                         </div>
                     </div>
                 </div>
@@ -97,61 +93,61 @@
         </div>
 
         <script>
-            let isRecording = false; // Variable de contrôle pour suivre l'état de l'enregistrement
+            let recognition = null; // Variable pour stocker l'instance de reconnaissance vocale
         
-        async function recordAndTranslate() {
-            if (isRecording) {
-                // Ne rien faire si un enregistrement est déjà en cours
-                return;
+            // Fonction pour démarrer ou arrêter la reconnaissance vocale
+            function toggleSpeechRecognition() {
+                if (!recognition) { // Si la reconnaissance n'est pas déjà en cours
+                    // Vérifiez d'abord si l'API SpeechRecognition est disponible dans le navigateur
+                    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                        // Créez une instance de reconnaissance vocale
+                        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                        recognition.lang = 'fr-FR'; // Définissez la langue de reconnaissance vocale (français ici)
+        
+                        recognition.onresult = function(event) {
+                            const transcript = event.results[0][0].transcript; // Obtenez le texte reconnu
+                            document.getElementById('textInput').value += transcript; // Ajoutez le texte reconnu au champ de saisie
+                        }
+        
+                        recognition.start(); // Démarrez la reconnaissance vocale
+        
+                        // Affichez un message pour indiquer que l'enregistrement est en cours
+                        document.querySelector('.fa-microphone').classList.add('recording');
+                    } else {
+                        // L'API SpeechRecognition n'est pas disponible, affichez un message d'erreur ou utilisez une alternative
+                        console.error('SpeechRecognition is not supported in this browser.');
+                    }
+                } else { // Si la reconnaissance est déjà en cours
+                    recognition.stop(); // Arrêtez la reconnaissance vocale
+                    recognition = null; // Réinitialisez la variable de reconnaissance
+        
+                    // Masquez le message d'enregistrement en cours
+                    document.querySelector('.fa-microphone').classList.remove('recording');
+                }
             }
         
-            try {
-                isRecording = true; // Mettre l'état de l'enregistrement à true
+            // Demandez l'autorisation dès que la page se charge
+            document.addEventListener('DOMContentLoaded', function() {
+                if ('webkitSpeechRecognition' in window) {
+                    window.webkitSpeechRecognition.requestPermission().then(function(result) {
+                        if (result === 'granted') {
+                            // Autorisation accordée, vous pouvez activer la reconnaissance vocale
+                        } else {
+                            // L'utilisateur a refusé l'autorisation, vous pouvez afficher un message d'avertissement
+                        }
+                    });
+                }
+            });
         
-                const recognition = new webkitSpeechRecognition();
-                recognition.lang = 'fr-FR'; // Langue pour la reconnaissance vocale
-                recognition.noiseSuppression = true; // Activer la suppression du bruit
-        
-                let startTime;
-        
-                recognition.onstart = () => {
-                    document.getElementById("recordingDuration").style.visibility = 'visible'; // Rendre l'élément visible
-                    startTime = Date.now();
-                    const recordingDuration = document.getElementById("recordingDuration");
-                    recordingDuration.textContent = 'Enregistrement en cours...';
-                    recordingDuration.style.color = 'green';  // Couleur du texte en vert
-                    recordingDuration.style.borderRadius = '5px';  // Exemple de border-radius
-                    recordingDuration.style.border = '3px solid green';  // Bordure de 2px solide en vert
-                    recordingDuration.style.height = '35px'
-                    recordingDuration.style.width = '205px'
-                    recordingDuration.style.textAlign = 'center'
-                };
-        
-                recognition.onresult = (event) => {
-                    const voiceText = event.results[0][0].transcript;
-                    const currentText = document.getElementById("con").value;
-                    document.getElementById("con").value = currentText + ' ' + voiceText;
-                };
-        
-                recognition.onend = () => {
-                    isRecording = false; // Mettre l'état de l'enregistrement à false
-                    const endTime = Date.now();
-                    const duration = (endTime - startTime) / 1000;
-                    document.getElementById("recordingDuration").textContent = `Durée de l'enregistrement : ${duration.toFixed(2)}s`;
-                    setTimeout(() => {
-                        document.getElementById("recordingDuration").style.visibility = 'hidden'; // Cacher l'élément
-                    }, 2000); // Supprimer après 2 secondes
-                };
-        
-                recognition.start();
-            } catch (error) {
-                console.error('Erreur de reconnaissance vocale :', error);
-                isRecording = false; // En cas d'erreur, réinitialiser l'état de l'enregistrement
-            }
-        }
-        
+            // Ajoutez un gestionnaire d'événements sur le bouton de microphone
+            document.querySelector('.fa-microphone').addEventListener('click', function() {
+                toggleSpeechRecognition(); // Démarrez ou arrêtez la reconnaissance vocale lorsque le bouton est cliqué
+            });
         </script>
         
+        
+        
+
         <script>
 
             
