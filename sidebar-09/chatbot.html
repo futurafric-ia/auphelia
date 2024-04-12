@@ -1,64 +1,309 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Sidebar 09</title>
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Style pour le champ de saisie fixé au pied de la page */
-        #footerInput {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px;  
-        }
-        .form-controls {
-            border: 2px solid black; /* Bordure noire */
-            border-radius: 10px; /* Coins arrondis */
-            padding: 10px; /* Espacement intérieur */
-            max-width: 160%; /* Largeur du champ de saisie */
-            min-width: 195%;
-            margin: 0 auto; /* Centrer horizontalement */
-        }
-   
-    </style>
-</head>
-<body>
-    <div class="wrapper d-flex align-items-stretch">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Auphelia.IA</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="icon" href="images/drapeau.png" type="image/x-icon">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+        
+
+        <style>
+            /* Style pour le champ de saisie fixé au pied de la page */
+            #footerInput {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 110%;
+                padding: 20px;
+                background-color: white; /* Couleur de fond */
+            }
+            .form-controls {
+                border: 2px solid black; /* Bordure noire */
+                border-radius: 10px; /* Coins arrondis */
+                padding: 10px; /* Espacement intérieur */
+                width: 100%; /* Largeur du champ de saisie */
+                margin-right: 10px; /* Marge à droite pour les icônes */
+                box-sizing: border-box; /* Inclure la bordure dans la largeur */
+            }
+            .icon {
+                margin-top: 5px; /* Ajustement vertical pour aligner les icônes */
+                cursor: pointer;
+            }
+    /* Masquer la barre de défilement verticale */
+    content::-webkit-scrollbar {
+        width: 0;
+    }
+
+        </style>
+    </head>
+    <body>
         <!-- Page Content  -->
+
+        <div class="container-fluid sticky-top" style="background-color: white;">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-dark p-0">
+                    <a href="" class="navbar-brand d-flex align-items-center"> <!-- Ajoutez la classe d-flex et align-items-center -->
+                        <h1 class="text-dark "> <!-- Ajoutez la classe m-0 pour supprimer les marges -->
+                            Auphelia.IA
+                        </h1>
+                        <img src="images/drapeau.png" class="ml-2" style="height: 30px; width: auto;">
+                    </a>
+                    <div id="recordingDuration"></div>
+                    <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+        
+        
         <div id="content" class="p-4 p-md-5 pt-5">
-            <h2 class="mb-4">Liste view</h2>
+            <!-- <h2 class="mb-4">Auphelia.IA</h2> -->
+
+            <div class="chat-box">
+                <ul class="chat-history" id="chatHistory">
+                    <!-- Messages will be appended here dynamically -->
+                </ul>
+                <div id="scrollDownButton" class="scroll-down-button" onclick="scrollToBottom()">
+                    <i class="fas fa-angle-down"></i>
+                </div>
+                <div id="spinner" class="spinner-border text-success" style="display: none;"></div>
+            </div>
 
             <div id="footerInput">
-              <div class="container">
-                  <div class="row">
-                      <div class="col-md-6">
-                          <input type="text" class="form-controls" placeholder="Entrez votre texte">
-                      </div>
-                  
-                  </div>
-              </div>
-          </div>
+                <div class="container">
+                    <div class="row justify-content-center"> <!-- Centrer le contenu de la rangée -->
+                        <div class="col-md-6">
+                            <input type="text" class="form-controls" id="textInput" name="content" placeholder="Entrez votre texte">
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary icon" onclick="sendMessage()">
+                                <i class="fa fa-paper-plane"></i> <!-- Icône d'envoi -->
+                            </button>
+                            <button class="btn btn-primary icon" onclick="recordAndTranslate()">
+                                <i class="fa fa-microphone"></i> <!-- Icône de microphone -->
+                            </button>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <!-- Champ de saisie fixé au pied de la page -->
+        <script>
+            let isRecording = false; // Variable de contrôle pour suivre l'état de l'enregistrement
         
-    </div>
+        async function recordAndTranslate() {
+            if (isRecording) {
+                // Ne rien faire si un enregistrement est déjà en cours
+                return;
+            }
+        
+            try {
+                isRecording = true; // Mettre l'état de l'enregistrement à true
+        
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'fr-FR'; // Langue pour la reconnaissance vocale
+                recognition.noiseSuppression = true; // Activer la suppression du bruit
+        
+                let startTime;
+        
+                recognition.onstart = () => {
+                    document.getElementById("recordingDuration").style.visibility = 'visible'; // Rendre l'élément visible
+                    startTime = Date.now();
+                    const recordingDuration = document.getElementById("recordingDuration");
+                    recordingDuration.textContent = 'Enregistrement en cours...';
+                    recordingDuration.style.color = 'green';  // Couleur du texte en vert
+                    recordingDuration.style.borderRadius = '5px';  // Exemple de border-radius
+                    recordingDuration.style.border = '3px solid green';  // Bordure de 2px solide en vert
+                    recordingDuration.style.height = '35px'
+                    recordingDuration.style.width = '205px'
+                    recordingDuration.style.textAlign = 'center'
+                };
+        
+                recognition.onresult = (event) => {
+                    const voiceText = event.results[0][0].transcript;
+                    const currentText = document.getElementById("con").value;
+                    document.getElementById("con").value = currentText + ' ' + voiceText;
+                };
+        
+                recognition.onend = () => {
+                    isRecording = false; // Mettre l'état de l'enregistrement à false
+                    const endTime = Date.now();
+                    const duration = (endTime - startTime) / 1000;
+                    document.getElementById("recordingDuration").textContent = `Durée de l'enregistrement : ${duration.toFixed(2)}s`;
+                    setTimeout(() => {
+                        document.getElementById("recordingDuration").style.visibility = 'hidden'; // Cacher l'élément
+                    }, 2000); // Supprimer après 2 secondes
+                };
+        
+                recognition.start();
+            } catch (error) {
+                console.error('Erreur de reconnaissance vocale :', error);
+                isRecording = false; // En cas d'erreur, réinitialiser l'état de l'enregistrement
+            }
+        }
+        
+        </script>
+        
+        <script>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
-    <script>
-        // Réaligner le champ de saisie lorsque la barre latérale est ouverte ou fermée
-        $(document).ready(function(){
-            $('#sidebarCollapse').on('click', function(){
-                $('#footerInput').toggleClass('sidebar-open');
+            
+            var data = []; // Déclaration de la variable data
+        
+            function addToLocalStorage(message, role) {
+                var chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+                chatHistory.push({ role: role, content: message });
+                localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+            }
+        
+            function appendMessage(role, message) {
+                var chatHistory = document.getElementById("chatHistory");
+                var fragment = document.createDocumentFragment();
+                var li = document.createElement("li");
+                li.className = role + "-message";
+        
+                // Ajout de l'icône de robot pour les messages de type "bot"
+                // if (role === 'bot') {
+                //     var robotIcon = document.createElement("img");
+                //     // robotIcon.src = "avocat.png"; // Spécifiez le chemin vers votre icône de robot
+                //     robotIcon.className = "robot-icon";
+                //     robotIcon.style.width = "20px"; // Définissez la largeur souhaitée
+                //     robotIcon.style.height = "20px"; // Définissez la hauteur souhaitée
+                //     // Ajoute une bordure noire de 2px autour de l'icône
+                //     li.appendChild(robotIcon);
+                // }
+        
+                // Si le message est structuré en format JSON
+                if (typeof message === 'object' && message !== null) {
+                    // Créer un élément de paragraphe pour chaque clé-valeur dans l'objet
+                    Object.keys(message).forEach(function(key) {
+                        var p = document.createElement("p");
+                        p.textContent = key + ": " + message[key];
+                        li.appendChild(p);
+                    });
+                } else if (typeof message === 'string') { // Si le message est une chaîne de caractères simple
+                    // Diviser le message en lignes et les ajouter individuellement
+                    if (message.match(/^\d+\.\s*/) || message.match(/^\d+\)\s*/)) {
+                        // Si le message commence par un nombre suivi d'un point ou d'une parenthèse, c'est une liste numérotée
+                        var items = message.split(/\d+\.\s*|\d+\)\s*/).filter(Boolean);
+                        var ol = document.createElement("ol");
+                        items.forEach(function(item) {
+                            var liItem = document.createElement("li");
+                            liItem.textContent = item.trim(); // Supprimer les espaces inutiles
+                            ol.appendChild(liItem);
+                        });
+                        li.appendChild(ol);
+                    } else {
+                        // Si ce n'est pas une liste numérotée, divisez simplement le message en lignes et ajoutez-les individuellement
+                        message.split('\n').forEach(function(line) {
+                            var p = document.createElement("p");
+                            p.textContent = line;
+                            li.appendChild(p);
+                        });
+                    }
+                } else { // Si le message est d'un type différent
+                    var p = document.createElement("p");
+                    p.textContent = message;
+                    li.appendChild(p);
+                }
+                fragment.appendChild(li);
+                chatHistory.appendChild(fragment);
+                // Ajouter le message au stockage local
+                addToLocalStorage(message, role);
+                // Sauvegarder les données dans la base de données
+            }
+        
+            var conversationHistory = [];
+            
+            async function sendMessage() {
+                // Récupérer le message de l'utilisateur
+                var userMessage = document.getElementsByName("content")[0].value.trim();
+        
+                // Afficher le spinner pendant l'attente de la réponse
+                document.getElementById("spinner").style.display = "block";
+        
+                // Désactiver le champ de saisie et le bouton pendant l'envoi de la question
+                document.getElementsByName("content")[0].disabled = true;
+        
+                // Ajouter le message de l'utilisateur à la liste de données
+                data.push({
+                    role: "user",
+                    content: userMessage
+                });
+        
+                // Define the API URL
+                var apiUrl = 'https://judi.azurewebsites.net/question/';
+        
+                try {
+                    // Make an AJAX call using the fetch API
+                    var response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data), // Format conforme à l'attente de l'API
+                    });
+        
+                    // Réactiver le champ de saisie après la réception de la réponse
+                    document.getElementsByName("content")[0].disabled = false;
+        
+                    // Masquer le spinner une fois que la réponse est reçue
+                    document.getElementById("spinner").style.display = "none";
+        
+                    // Update the 'response' variable with the actual bot's reply
+                    var botResponse = await response.json();
+        
+                    console.log('Réponse du bot :', botResponse);
+
+                    data.push({
+                role: "system",
+                content: botResponse
             });
-        });
-    </script>
-</body>
-</html>
+
+            // Mettre à jour l'historique de la conversation
+            conversationHistory = data;
+
+            // Afficher la conversation complète dans la console au format JSON
+            console.log("Conversation History: ", JSON.stringify(conversationHistory));
+
+                    // Afficher la question de l'utilisateur dans l'interface utilisateur
+                    appendMessage("user","Utilisateur : "+" "+ userMessage);
+        
+                    // Afficher la réponse du bot dans l'interface utilisateur
+                    appendMessage("bot", "Auphelia : "+" "+botResponse);
+        
+                    // Stocker la question et la réponse dans le localStorage
+                    var chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+                    chatHistory.push({ role: "user", content: userMessage });
+                    chatHistory.push({ role: "bot", content: botResponse});
+                    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        
+                    // Clear the input field after sending the message
+                    document.getElementsByName("content")[0].value = "";
+                } catch (error) {
+                    console.error('Error:', error);
+        
+                    // Réactiver le champ de saisie en cas d'erreur
+                    document.getElementsByName("content")[0].disabled = false;
+        
+                    // Masquer le spinner en cas d'erreur
+                    document.getElementById("spinner").style.display = "none";
+        
+                    // Arrêter la fonction en cas d'erreur pour éviter l'envoi de la question
+                    return;
+                }
+            }
+        </script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+    </html>
