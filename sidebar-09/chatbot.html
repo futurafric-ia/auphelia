@@ -51,6 +51,8 @@
                         </h1>
                         <img src="images/drapeau.png" class="ml-2" style="height: 30px; width: auto;">
                     </a>
+                    <div id="recordingDuration"></div>
+
                     <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
                         data-bs-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
@@ -94,7 +96,6 @@
 
         <script>
             let recognition = null; // Variable pour stocker l'instance de reconnaissance vocale
-        
             // Fonction pour démarrer ou arrêter la reconnaissance vocale
             function toggleSpeechRecognition() {
                 if (!recognition) { // Si la reconnaissance n'est pas déjà en cours
@@ -219,83 +220,84 @@
             var conversationHistory = [];
             
             async function sendMessage() {
-                // Récupérer le message de l'utilisateur
-                var userMessage = document.getElementsByName("content")[0].value.trim();
-        
-                // Afficher le spinner pendant l'attente de la réponse
-                document.getElementById("spinner").style.display = "block";
-        
-                // Désactiver le champ de saisie et le bouton pendant l'envoi de la question
-                document.getElementsByName("content")[0].disabled = true;
-        
-                // Ajouter le message de l'utilisateur à la liste de données
-                data.push({
-                    role: "user",
-                    content: userMessage
-                });
-        
-                // Define the API URL
-                var apiUrl = 'https://judi.azurewebsites.net/question/';
-        
-                try {
-                    // Make an AJAX call using the fetch API
-                    var response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data), // Format conforme à l'attente de l'API
-                    });
-        
-                    // Réactiver le champ de saisie après la réception de la réponse
-                    document.getElementsByName("content")[0].disabled = false;
-        
-                    // Masquer le spinner une fois que la réponse est reçue
-                    document.getElementById("spinner").style.display = "none";
-        
-                    // Update the 'response' variable with the actual bot's reply
-                    var botResponse = await response.json();
-        
-                    console.log('Réponse du bot :', botResponse);
+    // Récupérer le message de l'utilisateur
+    var userMessage = document.getElementsByName("content")[0].value.trim();
 
-                    data.push({
-                role: "system",
-                content: botResponse
-            });
+    // Afficher le spinner pendant l'attente de la réponse
+    document.getElementById("spinner").style.display = "block";
 
-            // Mettre à jour l'historique de la conversation
-            conversationHistory = data;
+    // Désactiver le champ de saisie et le bouton pendant l'envoi de la question
+    document.getElementsByName("content")[0].disabled = true;
 
-            // Afficher la conversation complète dans la console au format JSON
-            console.log("Conversation History: ", JSON.stringify(conversationHistory));
+    // Ajouter le message de l'utilisateur à la liste de données
+    data.push({
+        role: "user",
+        content: userMessage
+    });
 
-                    // Afficher la question de l'utilisateur dans l'interface utilisateur
-                    appendMessage("user","Utilisateur : "+" "+ userMessage);
-        
-                    // Afficher la réponse du bot dans l'interface utilisateur
-                    appendMessage("bot", "Auphelia : "+" "+botResponse);
-        
-                    // Stocker la question et la réponse dans le localStorage
-                    var chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
-                    chatHistory.push({ role: "user", content: userMessage });
-                    chatHistory.push({ role: "bot", content: botResponse});
-                    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-        
-                    // Clear the input field after sending the message
-                    document.getElementsByName("content")[0].value = "";
-                } catch (error) {
-                    console.error('Error:', error);
-        
-                    // Réactiver le champ de saisie en cas d'erreur
-                    document.getElementsByName("content")[0].disabled = false;
-        
-                    // Masquer le spinner en cas d'erreur
-                    document.getElementById("spinner").style.display = "none";
-        
-                    // Arrêter la fonction en cas d'erreur pour éviter l'envoi de la question
-                    return;
-                }
-            }
+    // Define the API URL
+    var apiUrl = 'https://auphelia.azurewebsites.net/question/';
+
+    try {
+        // Make an AJAX call using the fetch API
+        var response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data), // Format conforme à l'attente de l'API
+        });
+
+        // Réactiver le champ de saisie après la réception de la réponse
+        document.getElementsByName("content")[0].disabled = false;
+
+        // Masquer le spinner une fois que la réponse est reçue
+        document.getElementById("spinner").style.display = "none";
+
+        // Update the 'response' variable with the actual bot's reply
+        var botResponse = await response.json();
+
+        console.log('Réponse du bot :', botResponse);
+
+        data.push({
+            role: "system",
+            content: botResponse
+        });
+
+        // Mettre à jour l'historique de la conversation
+        conversationHistory = data;
+
+        // Afficher la conversation complète dans la console au format JSON
+        console.log("Conversation History: ", JSON.stringify(conversationHistory));
+
+        // Afficher la question de l'utilisateur dans l'interface utilisateur
+        appendMessage("user","Utilisateur : "+" "+ userMessage);
+
+        // Afficher la réponse du bot dans l'interface utilisateur
+        appendMessage("bot", "Auphelia : "+" "+botResponse);
+
+        // Stocker la question et la réponse dans le localStorage
+        var chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+        chatHistory.push({ role: "user", content: userMessage });
+        chatHistory.push({ role: "bot", content: botResponse});
+        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+
+        // Clear the input field after sending the message
+        document.getElementsByName("content")[0].value = "";
+    } catch (error) {
+        console.error('Error:', error);
+
+        // Réactiver le champ de saisie en cas d'erreur
+        document.getElementsByName("content")[0].disabled = false;
+
+        // Masquer le spinner en cas d'erreur
+        document.getElementById("spinner").style.display = "none";
+
+        // Arrêter l'exécution de la fonction en cas d'erreur pour éviter l'envoi de la question
+        return;
+    }
+}
+
         </script>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
