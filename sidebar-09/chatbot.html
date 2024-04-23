@@ -1,307 +1,309 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Auphelia.IA</title>
-        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="icon" href="images/drapeau.png" type="image/x-icon">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <title>Auphelia.IA</title>
+            <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+            <link rel="stylesheet" href="css/style.css">
+            <link rel="icon" href="images/drapeau.png" type="image/x-icon">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-        <style>
-            /* Style pour le champ de saisie fixé au pied de la page */
-            #footerInput {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 110%;
-                padding: 20px;
-                background-color: white; /* Couleur de fond */
-            }
-            .form-controls {
-                border: 2px solid black; /* Bordure noire */
-                border-radius: 10px; /* Coins arrondis */
-                padding: 10px; /* Espacement intérieur */
-                width: 100%; /* Largeur du champ de saisie */
-                margin-right: 10px; /* Marge à droite pour les icônes */
-                box-sizing: border-box; /* Inclure la bordure dans la largeur */
-            }
-            .icon {
-                margin-top: 5px; /* Ajustement vertical pour aligner les icônes */
-                cursor: pointer;
-            }
-    /* Masquer la barre de défilement verticale */
-    content::-webkit-scrollbar {
-        width: 0;
+            <style>
+                /* Style pour le champ de saisie fixé au pied de la page */
+                #footerInput {
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    width: 110%;
+                    padding: 20px;
+                    background-color: white; /* Couleur de fond */
+                }
+                .form-controls {
+                    border: 2px solid black; /* Bordure noire */
+                    border-radius: 10px; /* Coins arrondis */
+                    padding: 10px; /* Espacement intérieur */
+                    width: 100%; /* Largeur du champ de saisie */
+                    margin-right: 10px; /* Marge à droite pour les icônes */
+                    box-sizing: border-box; /* Inclure la bordure dans la largeur */
+                }
+                .icon {
+                    margin-top: 5px; /* Ajustement vertical pour aligner les icônes */
+                    cursor: pointer;
+                }
+        /* Masquer la barre de défilement verticale */
+        content::-webkit-scrollbar {
+            width: 0;
+        }
+       body::-webkit-scrollbar {
+            width: 0;
+        }
+
+        .user-message, .bot-message {
+    border-radius: 15px; /* Bordures arrondies */
+    padding: 10px; /* Espacement intérieur */
+    margin-bottom: 10px; /* Marge entre chaque message */
+    opacity: 0; /* Par défaut, les messages sont transparents */
+    transition: opacity 0.3s ease-in-out; /* Animation de transition */
+    display:block; /* Permet au message de s'adapter à la largeur du contenu */
+    width: auto; /* Largeur automatique en fonction du contenu */
+    max-width: 85%; /* Limite la largeur maximale du message */
+
+}
+
+
+    .user-message {
+        background-color: #F0F0F0; /* Couleur de fond pour les messages de l'utilisateur */
+        text-align: left;
+        animation: fadeInUser 0.5s ease-in-out forwards; /* Animation d'apparition */
     }
 
-        </style>
-    </head>
-    <body>
-        <!-- Page Content  -->
+    .bot-message {
+        background-color: #DCF8C6; /* Couleur de fond pour les messages du bot */
+        text-align: right;
+        animation: fadeInBot 0.5s ease-in-out forwards; /* Animation d'apparition */
+    }
 
-        <div class="container-fluid sticky-top" style="background-color: white;">
-            <div class="container">
-                <nav class="navbar navbar-expand-lg navbar-dark p-0">
-                    <a href="index.html" class="navbar-brand d-flex align-items-center"> <!-- Ajoutez la classe d-flex et align-items-center -->
-                        <h1 class="text-dark "> <!-- Ajoutez la classe m-0 pour supprimer les marges -->
-                            Auphelia.IA
-                        </h1>
-                        <img src="images/drapeau.png" class="ml-2" style="height: 30px; width: auto;">
-                    </a>
-                    <div id="recordingDuration"></div>
+    @keyframes fadeInUser {
+        from {
+            opacity: 0; /* Commence transparent */
+            transform: translateX(-20px); /* Déplace légèrement vers la gauche */
+        }
+        to {
+            opacity: 1; /* Devient opaque */
+            transform: translateX(0); /* Retour à la position d'origine */
+        }
+    }
 
-                    <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
-                        data-bs-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </nav>
-            </div>
-        </div>
-        
-        
-        <div id="content" class="p-4 p-md-5 pt-5">
-            <!-- <h2 class="mb-4">Auphelia.IA</h2> -->
+    @keyframes fadeInBot {
+        from {
+            opacity: 0; /* Commence transparent */
+            transform: translateX(20px); /* Déplace légèrement vers la droite */
+        }
+        to {
+            opacity: 1; /* Devient opaque */
+            transform: translateX(0); /* Retour à la position d'origine */
+        }
+    }
 
-            <div class="chat-box">
-                <ul class="chat-history" id="chatHistory">
-                    <!-- Messages will be appended here dynamically -->
-                </ul>
-                <div id="scrollDownButton" class="scroll-down-button" onclick="scrollToBottom()">
-                    <i class="fas fa-angle-down"></i>
-                </div>
-                <div id="spinner" class="spinner-border text-success" style="display: none;"></div>
-            </div>
+    .user-icon, .bot-icon {
+        width: 20px; /* Taille de l'icône */
+        height: auto;
+        margin-right: 5px; /* Marge à droite de l'icône */
+    }
 
-            <div id="footerInput">
+            </style>
+        </head>
+        <body>
+            <!-- Page Content  -->
+            <div class="container-fluid sticky-top" style="background-color: white;">
                 <div class="container">
-                    <div class="row justify-content-center"> <!-- Centrer le contenu de la rangée -->
-                        <div class="col-md-6">
-                            <input type="text" class="form-controls" id="textInput" name="content" placeholder="Entrez votre texte">
+                    <nav class="navbar navbar-expand-lg navbar-dark p-0">
+                        <a href="" class="navbar-brand d-flex align-items-center">
+                            <h1 class="text-dark m-0" style="text-align: center;">
+                                Auphelia.IA
+                            </h1>
+                            <img src="images/drapeau.png" class="ml-2" style="height: 30px; width: auto;">
+                        </a>
+                        
+                        <div id="recordingDuration"></div>
+            
+                        <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
+                            data-bs-target="#navbarCollapse">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+            
+                        <!-- Ajout de l'élément pour la déconnexion à droite -->
+                        <div class="collapse navbar-collapse justify-content-end">
+                                <i class="fa fa-sign-out"></i> <!-- Assurez-vous de remplacer "fa-sign-out" par la classe de votre icône de déconnexion -->
+                            </a>
                         </div>
-                        <div class="col-md-3">
-                            <button class="btn btn-primary icon" onclick="sendMessage()">
-                                <i class="fa fa-paper-plane"></i> <!-- Icône d'envoi -->
-                            </button>
-                            <button class="btn btn-primary icon">
-                                <i class="fa fa-microphone"></i> <!-- Icône de microphone -->
-                            </button>
+                        
+                    </nav>
+                </div>
+            </div>
+            
+        
+            
+            
+        
+            <div id="content" class="container p-md-5 pt-5">
+                <div class="chat-box">
+                 <!-- Dans la section HTML où les messages sont ajoutés dynamiquement -->
+<ul class="chat-history" id="chatHistory">
+    <!-- Messages seront ajoutés ici dynamiquement -->
+</ul>
+
+                    <!-- <div id="scrollDownButton" class="scroll-down-button" onclick="scrollToBottom()">
+                        <i class="fas fa-angle-down"></i>
+                    </div> -->
+                    <div id="spinner" class="spinner-border text-success" style="display: none;"></div>
+                </div>
+        
+                <div id="footerInput">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <input type="text" class="form-controls" id="textInput" name="content" placeholder="Entrez votre texte">
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-primary icon" onclick="sendMessage()">
+                                    <i class="fa fa-paper-plane"></i>
+                                </button>
+                                <button class="btn btn-primary icon">
+                                    <i class="fa fa-microphone"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <script>
-            let recognition = null; // Variable pour stocker l'instance de reconnaissance vocale
-            // Fonction pour démarrer ou arrêter la reconnaissance vocale
-            function toggleSpeechRecognition() {
-                if (!recognition) { // Si la reconnaissance n'est pas déjà en cours
-                    // Vérifiez d'abord si l'API SpeechRecognition est disponible dans le navigateur
-                    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-                        // Créez une instance de reconnaissance vocale
-                        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                        recognition.lang = 'fr-FR'; // Définissez la langue de reconnaissance vocale (français ici)
-        
-                        recognition.onresult = function(event) {
-                            const transcript = event.results[0][0].transcript; // Obtenez le texte reconnu
-                            document.getElementById('textInput').value += transcript; // Ajoutez le texte reconnu au champ de saisie
-                        }
-        
-                        recognition.start(); // Démarrez la reconnaissance vocale
-        
-                        // Affichez un message pour indiquer que l'enregistrement est en cours
-                        document.querySelector('.fa-microphone').classList.add('recording');
-                    } else {
-                        // L'API SpeechRecognition n'est pas disponible, affichez un message d'erreur ou utilisez une alternative
-                        console.error('SpeechRecognition is not supported in this browser.');
-                    }
-                } else { // Si la reconnaissance est déjà en cours
-                    recognition.stop(); // Arrêtez la reconnaissance vocale
-                    recognition = null; // Réinitialisez la variable de reconnaissance
-        
-                    // Masquez le message d'enregistrement en cours
-                    document.querySelector('.fa-microphone').classList.remove('recording');
-                }
-            }
-        
-            // Demandez l'autorisation dès que la page se charge
-            document.addEventListener('DOMContentLoaded', function() {
-                if ('webkitSpeechRecognition' in window) {
-                    window.webkitSpeechRecognition.requestPermission().then(function(result) {
-                        if (result === 'granted') {
-                            // Autorisation accordée, vous pouvez activer la reconnaissance vocale
+            <script>
+                let recognition = null; // Variable pour stocker l'instance de reconnaissance vocale
+                // Fonction pour démarrer ou arrêter la reconnaissance vocale
+                function toggleSpeechRecognition() {
+                    if (!recognition) { // Si la reconnaissance n'est pas déjà en cours
+                        // Vérifiez d'abord si l'API SpeechRecognition est disponible dans le navigateur
+                        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                            // Créez une instance de reconnaissance vocale
+                            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                            recognition.lang = 'fr-FR'; // Définissez la langue de reconnaissance vocale (français ici)
+            
+                            recognition.onresult = function(event) {
+                                const transcript = event.results[0][0].transcript; // Obtenez le texte reconnu
+                                document.getElementById('textInput').value += transcript; // Ajoutez le texte reconnu au champ de saisie
+                            }
+            
+                            recognition.start(); // Démarrez la reconnaissance vocale
+            
+                            // Affichez un message pour indiquer que l'enregistrement est en cours
+                            document.querySelector('.fa-microphone').classList.add('recording');
                         } else {
-                            // L'utilisateur a refusé l'autorisation, vous pouvez afficher un message d'avertissement
+                            // L'API SpeechRecognition n'est pas disponible, affichez un message d'erreur ou utilisez une alternative
+                            console.error('SpeechRecognition is not supported in this browser.');
                         }
-                    });
-                }
-            });
-        
-            // Ajoutez un gestionnaire d'événements sur le bouton de microphone
-            document.querySelector('.fa-microphone').addEventListener('click', function() {
-                toggleSpeechRecognition(); // Démarrez ou arrêtez la reconnaissance vocale lorsque le bouton est cliqué
-            });
-        </script>
-        
-        
-        
-
-        <script>
-
+                    } else { // Si la reconnaissance est déjà en cours
+                        recognition.stop(); // Arrêtez la reconnaissance vocale
+                        recognition = null; // Réinitialisez la variable de reconnaissance
             
-            var data = []; // Déclaration de la variable data
-        
-            function addToLocalStorage(message, role) {
-                var chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
-                chatHistory.push({ role: role, content: message });
-                localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-            }
-        
-            function appendMessage(role, message) {
-                var chatHistory = document.getElementById("chatHistory");
-                var fragment = document.createDocumentFragment();
-                var li = document.createElement("li");
-                li.className = role + "-message";
-        
-                // Ajout de l'icône de robot pour les messages de type "bot"
-                // if (role === 'bot') {
-                //     var robotIcon = document.createElement("img");
-                //     // robotIcon.src = "avocat.png"; // Spécifiez le chemin vers votre icône de robot
-                //     robotIcon.className = "robot-icon";
-                //     robotIcon.style.width = "20px"; // Définissez la largeur souhaitée
-                //     robotIcon.style.height = "20px"; // Définissez la hauteur souhaitée
-                //     // Ajoute une bordure noire de 2px autour de l'icône
-                //     li.appendChild(robotIcon);
-                // }
-        
-                // Si le message est structuré en format JSON
-                if (typeof message === 'object' && message !== null) {
-                    // Créer un élément de paragraphe pour chaque clé-valeur dans l'objet
-                    Object.keys(message).forEach(function(key) {
-                        var p = document.createElement("p");
-                        p.textContent = key + ": " + message[key];
-                        li.appendChild(p);
-                    });
-                } else if (typeof message === 'string') { // Si le message est une chaîne de caractères simple
-                    // Diviser le message en lignes et les ajouter individuellement
-                    if (message.match(/^\d+\.\s*/) || message.match(/^\d+\)\s*/)) {
-                        // Si le message commence par un nombre suivi d'un point ou d'une parenthèse, c'est une liste numérotée
-                        var items = message.split(/\d+\.\s*|\d+\)\s*/).filter(Boolean);
-                        var ol = document.createElement("ol");
-                        items.forEach(function(item) {
-                            var liItem = document.createElement("li");
-                            liItem.textContent = item.trim(); // Supprimer les espaces inutiles
-                            ol.appendChild(liItem);
-                        });
-                        li.appendChild(ol);
-                    } else {
-                        // Si ce n'est pas une liste numérotée, divisez simplement le message en lignes et ajoutez-les individuellement
-                        message.split('\n').forEach(function(line) {
-                            var p = document.createElement("p");
-                            p.textContent = line;
-                            li.appendChild(p);
+                        // Masquez le message d'enregistrement en cours
+                        document.querySelector('.fa-microphone').classList.remove('recording');
+                    }
+                }
+            
+                // Demandez l'autorisation dès que la page se charge
+                document.addEventListener('DOMContentLoaded', function() {
+                    if ('webkitSpeechRecognition' in window) {
+                        window.webkitSpeechRecognition.requestPermission().then(function(result) {
+                            if (result === 'granted') {
+                                // Autorisation accordée, vous pouvez activer la reconnaissance vocale
+                            } else {
+                                // L'utilisateur a refusé l'autorisation, vous pouvez afficher un message d'avertissement
+                            }
                         });
                     }
-                } else { // Si le message est d'un type différent
-                    var p = document.createElement("p");
-                    p.textContent = message;
-                    li.appendChild(p);
-                }
-                fragment.appendChild(li);
-                chatHistory.appendChild(fragment);
-                // Ajouter le message au stockage local
-                addToLocalStorage(message, role);
-                // Sauvegarder les données dans la base de données
-            }
-        
-            var conversationHistory = [];
+                });
             
-            async function sendMessage() {
-    // Récupérer le message de l'utilisateur
-    var userMessage = document.getElementsByName("content")[0].value.trim();
+                // Ajoutez un gestionnaire d'événements sur le bouton de microphone
+                document.querySelector('.fa-microphone').addEventListener('click', function() {
+                    toggleSpeechRecognition(); // Démarrez ou arrêtez la reconnaissance vocale lorsque le bouton est cliqué
+                });
+            </script>
+            
+            
+            
 
-    // Afficher le spinner pendant l'attente de la réponse
+            <script>
+
+                
+                var data = []; // Déclaration de la variable data
+            
+                function addToLocalStorage(message, role) {
+                    var chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+                    chatHistory.push({ role: role, content: message });
+                    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+                }
+            
+                var data = [];
+
+                function appendMessage(role, message) {
+    var chatHistory = document.getElementById("chatHistory");
+    var li = document.createElement("li");
+    li.classList.add(role + "-message"); // Ajoutez la classe pour positionner correctement le message
+    
+    // Ajoutez les icônes en fonction du rôle
+    var icon = document.createElement("img");
+    if (role === "user") {
+        icon.src = "../user.png"; // Remplacez par le chemin de votre icône utilisateur
+        icon.alt = "Utilisateur";
+    } else if (role === "bot") {
+        icon.src = "../assistant.png"; // Remplacez par le chemin de votre icône assistant
+        icon.alt = "Assistant";
+    }
+    icon.classList.add(role + "-icon");
+    li.appendChild(icon);
+
+    // Créer un élément de texte pour afficher le message
+    var text = document.createElement("span");
+    text.textContent = message;
+    li.appendChild(text);
+
+    chatHistory.appendChild(li);
+}
+
+
+
+    async function sendMessage() {
+    var userMessage = document.getElementById("textInput").value.trim();
     document.getElementById("spinner").style.display = "block";
+    document.getElementById("textInput").disabled = true;
 
-    // Désactiver le champ de saisie et le bouton pendant l'envoi de la question
-    document.getElementsByName("content")[0].disabled = true;
+    // Créez une nouvelle instance de `data` pour chaque message envoyé
+    var newData = [{ role: "user", content: userMessage }];
 
-    // Ajouter le message de l'utilisateur à la liste de données
-    data.push({
-        role: "user",
-        content: userMessage
-    });
-
-    // Define the API URL
     var apiUrl = 'https://auphelia.azurewebsites.net/question/';
 
     try {
-        // Make an AJAX call using the fetch API
         var response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data), // Format conforme à l'attente de l'API
+            body: JSON.stringify(newData), // Utilisez la nouvelle instance de `data`
         });
 
-        // Réactiver le champ de saisie après la réception de la réponse
-        document.getElementsByName("content")[0].disabled = false;
-
-        // Masquer le spinner une fois que la réponse est reçue
+        document.getElementById("textInput").disabled = false;
         document.getElementById("spinner").style.display = "none";
-
-        // Update the 'response' variable with the actual bot's reply
         var botResponse = await response.json();
 
-        console.log('Réponse du bot :', botResponse);
+        newData.push({ role: "bot", content: botResponse });
 
-        data.push({
-            role: "system",
-            content: botResponse
-        });
+        // Remplacez `data` par la nouvelle instance de `newData`
+        data = newData;
 
-        // Mettre à jour l'historique de la conversation
-        conversationHistory = data;
+        appendMessage("user", "Utilisateur: " + userMessage);
+        appendMessage("bot", "Auphelia: " + botResponse);
 
-        // Afficher la conversation complète dans la console au format JSON
-        console.log("Conversation History: ", JSON.stringify(conversationHistory));
-
-        // Afficher la question de l'utilisateur dans l'interface utilisateur
-        appendMessage("user","Utilisateur : "+" "+ userMessage);
-
-        // Afficher la réponse du bot dans l'interface utilisateur
-        appendMessage("bot", "Auphelia : "+" "+botResponse);
-
-        // Stocker la question et la réponse dans le localStorage
         var chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
         chatHistory.push({ role: "user", content: userMessage });
-        chatHistory.push({ role: "bot", content: botResponse});
+        chatHistory.push({ role: "bot", content: botResponse });
         localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
 
-        // Clear the input field after sending the message
-        document.getElementsByName("content")[0].value = "";
+        document.getElementById("textInput").value = "";
     } catch (error) {
         console.error('Error:', error);
-
-        // Réactiver le champ de saisie en cas d'erreur
-        document.getElementsByName("content")[0].disabled = false;
-
-        // Masquer le spinner en cas d'erreur
+        document.getElementById("textInput").disabled = false;
         document.getElementById("spinner").style.display = "none";
-
-        // Arrêter l'exécution de la fonction en cas d'erreur pour éviter l'envoi de la question
         return;
     }
 }
 
-        </script>
+    </script>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
-    </html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        </body>
+        </html>
